@@ -6,7 +6,7 @@ const banners =
       title: 'Classic',
       subtitle: 'BY NATURE',
       description: 'TIMELESS SNEAKER REIMAGINED INTO THE COMFIEST STAPLE YET',
-      imageSrc: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_1728/cms/6upxsUmrp3cgNr5doQ9pJ1/91cc1f25b6401428071d881a6317194b/24Q3_WoolPiperGo_Site_Homepage_Hero_Desktop_2880x1245_M.png',
+      imageSrc: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/slider-4-1.jpg?v=1721699624',
       textColor: 'text-amber-900',
       product: 'THE NEW WOOL PIPER GO',
       buttonText: ['SHOP MEN', 'SHOP WOMEN']
@@ -15,7 +15,14 @@ const banners =
       title: 'Elevated',
       subtitle: 'BY NATURE',
       description: 'BOLD LIFTED SOLES ARE AN INSTANT OUTFIT UPGRADE.',
-      imageSrc: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_1920/cms/6gwrEhj8SXRSYhCRhmjHli/97c732fd5075378aeb1e63caf9d2c7d4/24Q4_LoungerLift_Site_HomepageHero_Desktop_2880x1245_V1_WithNAV.jpg',
+      imageSrc: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/slider-4-3.jpg?v=1721699625',
+      product: 'NEW LOUNGER LIFT',
+      buttonText: ['SHOP WOMEN']
+    }, {
+      title: 'Elevated',
+      subtitle: 'BY NATURE',
+      description: 'BOLD LIFTED SOLES ARE AN INSTANT OUTFIT UPGRADE.',
+      imageSrc: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/slider-4-1.jpg?v=1721699624',
       product: 'NEW LOUNGER LIFT',
       buttonText: ['SHOP WOMEN']
     }
@@ -70,7 +77,7 @@ const ShoeSlider = () => {
           </div>
         </div>
       ))}
-      <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+      <div className="absolute right-1/2 bottom-0 transform -translate-y-1/2 flex flex-row space-x-2">
         {banners.map((_, index) => (
           <button
             key={index}

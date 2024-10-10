@@ -1,145 +1,153 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-const OrderDetailsPage = () => {
-  const { orderId } = useParams();
-  const navigate = useNavigate();
-  const [shippingAddress, setShippingAddress] = useState(null);
-
-  // Fetch the shipping address from localStorage
-  useEffect(() => {
-    const storedAddress = JSON.parse(localStorage.getItem('address'));
-    if (storedAddress) {
-      setShippingAddress(storedAddress);
-    }
-  }, []);
-
-  // Dummy order data with product images, order status, type, and payment
-  const dummyOrders = {
-    '1': {
-      id: '1',
-      date: '2023-Oct-20',
-      status: 'Completed',
-      type: 'Online Purchase',
-      paymentMethod: 'Credit Card',
-      paymentStatus: 'Paid',
-      items: [
-        { 
-          name: 'Item A', 
-          qty: 2, 
-          price: '$40.00', 
-          image: 'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_947,f_auto,q_auto/https://www.allbirds.com/cdn/shop/files/A10788_S24Q2_Tree_Runner_Rugged_Beige_Natural_White_PDP_SINGLE_3Q_f010bf13-bb62-48b0-aa10-d93a4928cb11.png?v=1719460487' 
-        },
-        { 
-          name: 'Item B', 
-          qty: 1, 
-          price: '$40.00', 
-          image: 'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_947,f_auto,q_auto/https://www.allbirds.com/cdn/shop/files/A10788_S24Q2_Tree_Runner_Rugged_Beige_Natural_White_PDP_SINGLE_3Q_f010bf13-bb62-48b0-aa10-d93a4928cb11.png?v=1719460487' 
-        },
-      ],
-      total: '$120.00',
+const OrderDetails = () => {
+  const navigate= useNavigate();
+  const order = {
+    id: 'SO-00014',
+    date: '08/10/2024 05:58 PM',
+    total: 2700.00,
+    status: 'Pending',
+    product: {
+      name: 'Boat - 675-Light Salmon',
+      color: 'Light Salmon',
+      email: 'zohocommerce@gmail.com',
+      price: 2500.00,
+      quantity: 1,
+      image: 'https://gadgets21.zohocommerce.com/product-images/Product%20Image.webp/5268485000000097597/200x200',
     },
-    '2': {
-      id: '2',
-      date: '2023-Oct-21',
-      status: 'Processing',
-      type: 'In-Store Pickup',
-      paymentMethod: 'PayPal',
-      paymentStatus: 'Pending',
-      items: [
-        { 
-          name: 'Item C', 
-          qty: 1, 
-          price: '$50.00', 
-          image: 'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_947,f_auto,q_auto/https://www.allbirds.com/cdn/shop/files/A10788_S24Q2_Tree_Runner_Rugged_Beige_Natural_White_PDP_SINGLE_3Q_f010bf13-bb62-48b0-aa10-d93a4928cb11.png?v=1719460487' 
-        },
-      ],
-      total: '$50.00',
+    payment: {
+      subtotal: 2500.00,
+      shipping: 200.00,
+      tax: 0.00,
+      total: 2700.00,
+      method: 'test',
+    },
+    shipping: {
+      name: 'Vishal Giri',
+      address: 'at post irla, dharashiv, Maharashtra - 413509, India.',
+      phone: '09767176108',
+      email: 'vishal@cnetric.com',
     },
   };
 
-  const order = dummyOrders[orderId];
-
   return (
-    <div className="min-h-screen bg-[#f8f2ec] flex flex-col items-center py-10">
-      <div className="w-full max-w-3xl bg-white shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-6">Order Details</h1>
-<hr />
-        {/* Order Summary */}
-        <div className="flex justify-between py-4">
-            <div>
-        <p className="text-lg ">Order ID: {order.id}</p>
-        <p>Date: {order.date}</p>
-        </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="mt-4 p-4 px-8"
+    >
+      {/* Header Section */}
+      <div className="flex justify-between mb-4">
+        <h2 className="text-xl font-bold">Order Details</h2>
         <div>
-        <p>Status: {order.status}</p>
-        <p>Order Type: {order.type}</p>
+        <button className="bg-black text-white px-4 py-2 mr-2 " onClick={() => navigate('/account', { state: { tab: 'order' } })}>Back to Orders</button>
+        <button className="bg-black text-white px-4 py-2">Request Cancellation</button>
         </div>
-        </div>
-{/* <hr /> */}
-        {/* Payment Information */}
-        <h3 className="my-2 text-xl font-semibold">Payment Details</h3>
-        <hr />
-        <p className="mt-2">Payment Method: {order.paymentMethod}</p>
-        <p>Payment Status: {order.paymentStatus}</p>
-        {/* Product List */}
-        <table className="w-full mt-4">
-          <thead >
-            <tr>
-              {/* <th className="text-left border-b-2 pb-2">Image</th> */}
-              <th className="text-left border-b-2 pl-6 pb-2">Items</th>
-              <th className="text-center border-b-2  pb-2">Quantity</th>
-              <th className="text-center border-b-2  pb-2">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.items.map((item, index) => (
-              <tr key={index} className="border-b">
-                <td className="text-center py-2"><div className="flex justify-start px-4 gap-4 item-center">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 transition-transform duration-500 ease-in-out group-hover:scale-105" />
-                  {item.name}
-                  </div>
-                </td>
-                {/* <td className="py-2">                  <img src={item.image} alt={item.name} className="w-16 h-16" />
-               </td> */}
-                <td className="text-center py-2">{item.qty}</td>
-                <td className="text-center py-2">{item.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Total Price */}
-        <p className="text-lg mb-2 font-semibold mt-4">Total: {order.total}</p>
-<hr />
-        {/* Shipping Address */}
-        {shippingAddress && (  
-          <div className="mt-6">
-            <h3 className="text-xl font-bold">Shipping Address</h3>
-            <p>{shippingAddress.firstName} {shippingAddress.lastName}</p>
-            <p>{shippingAddress.address1}</p>
-            <p>{shippingAddress.city}, {shippingAddress.state}</p>
-            <p>{shippingAddress.country}, {shippingAddress.postalCode}</p>
-            <p>Phone: {shippingAddress.phone}</p>
-          </div>
-        )}
-
-        {!shippingAddress && (
-          <p className="text-sm text-gray-600 mt-6">
-            Shipping address not available.
-          </p>
-        )}
-
-        {/* Back to Orders Button */}
-        <button
-          onClick={() => navigate('/account')}
-          className="mt-6 px-4 py-2 bg-black text-white font-semibold"
-        >
-          Back to Orders
-        </button>
       </div>
-    </div>
+
+      {/* Order Summary */}
+      <div className="border p-4 mb-4 flex justify-between">
+        <p>Order ID: {order.id} <br /> Placed on: {order.date} <br /> Total: Rs.{order.total.toFixed(2)}</p>
+        <p className="mt-2">Order Status: <span className="text-yellow-500">{order.status}</span></p>
+      </div>
+
+      {/* Product Information */}
+      <div className="border p-4 mb-4">
+        <div className="flex items-center mb-4">
+          <motion.img 
+            src={order.product.image} 
+            alt={order.product.name} 
+            className="w-16 h-16 mr-4" 
+            whileHover={{ scale: 1.1 }}
+          />
+          <div>
+            <p className="font-semibold">{order.product.name}</p>
+            <p>Color: {order.product.color}</p>
+            <p>Mail: {order.product.email}</p>
+            <p>Price: Rs.{order.product.price.toFixed(2)}</p>
+            <p>Quantity: {order.product.quantity}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Payment, Shipping, and Order Data (Using Tables) */}
+      <motion.div className="grid grid-cols-3 gap-4">
+        
+        {/* Payment Information */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border p-4 mb-4">
+          <h3 className="font-semibold mb-2">Payment Information</h3>
+          <hr />
+          <table className="table-auto w-full">
+            <tbody>
+              <tr>
+                <td className="py-2">Subtotal:</td>
+                <td className="text-right">Rs.{order.payment.subtotal.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Shipping:</td>
+                <td className="text-right">Rs.{order.payment.shipping.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Tax:</td>
+                <td className="text-right">Rs.{order.payment.tax.toFixed(2)}</td>
+              </tr>
+              <tr className='border-y'>
+                <td className="font-semibold py-2">Total:</td>
+                <td className="text-right font-semibold">Rs.{order.payment.total.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Payment Method:</td>
+                <td className="text-right">{order.payment.method}</td>
+              </tr>
+            </tbody>
+          </table>
+        </motion.div>
+        
+        {/* Shipping Information */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border p-4 mb-4">
+          <h3 className="font-semibold mb-2">Shipping Address</h3>
+          <hr />
+          <table className="table-auto w-full">
+            <tbody>
+              <tr>
+                <td className="py-2">Name:</td>
+                <td className="text-right">{order.shipping.name}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Address:</td>
+                <td className="text-right py-2">{order.shipping.address}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Phone:</td>
+                <td className="text-right">{order.shipping.phone}</td>
+              </tr>
+              <tr>
+                <td className="py-2">Email:</td>
+                <td className="text-right">{order.shipping.email}</td>
+              </tr>
+            </tbody>
+          </table>
+        </motion.div>
+        
+        {/* Order Data */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border p-4 mb-4">
+          <h3 className="font-semibold mb-2">Order Data</h3>
+          <hr />
+          <table className="table-auto w-full">
+            <tbody>
+              <tr>
+                <td className="py-2">Email:</td>
+                <td className="text-right">{order.shipping.email}</td>
+              </tr>
+            </tbody>
+          </table>
+        </motion.div>
+
+      </motion.div>
+    </motion.div>
   );
 };
 
-export default OrderDetailsPage;
+export default OrderDetails;

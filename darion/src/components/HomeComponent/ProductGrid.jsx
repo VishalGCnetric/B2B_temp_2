@@ -1,103 +1,90 @@
 import React from 'react';
-import { motion } from 'framer-motion'; // For smooth animations
-import 'tailwindcss/tailwind.css';
+import { motion } from 'framer-motion';
+import { Heart, ShoppingCart, RefreshCw } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-// Product data object
 const products = [
-  {
-    id: 1,
-    name: 'Tree Runner Go',
-    color: 'Thunder Red',
-    price: '$120',
-    img: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_600/cms/25kaBcqrF20cfR3D2EVJh7/2a70011de8a9b7a09a9ca4db30061962/A10967_24Q2_Tree_Runner_Go_Thunder_Red_Natural_White_PDP_LEFT-2000x2000.png',
-  },
-  {
-    id: 2,
-    name: 'Tree Dasher Relay',
-    color: 'Blizzard/Thunder Red',
-    price: '$135',
-    img: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_600/cms/1KP80D2rQtCP8vovpLHHeW/ea5ad914685cf5a7abfb1acca98de4ad/A11061_24Q3_Tree_Dasher_Relay_Blizzard_Thunder_Red_Natural_White_PDP_LEFT-2000x2000.png',
-  },
-  {
-    id: 3,
-    name: 'Tree Dasher 2',
-    color: 'Blizzard/Thunder Red',
-    price: '$135',
-    img: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_600/cms/3tr7lkOFbPGPXNbtxI0VAY/1a81fb077731f385f7db585ffd1911c9/A11039_24Q3_Tree_Dasher_2_Blizzard_Thunder_Red_Natural_White_PDP_LEFT-2000x2000.png',
-  },
-  {
-    id: 4,
-    name: 'Tree Dasher Relay',
-    color: 'Rugged Beige',
-    price: '$135',
-    img: 'https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_600/cms/5orWCriOBkoyZRcM5jvWJh/b4df41cbff0dce2bb1f4a9abc87990f1/A11065_24Q3_Tree_Dasher_Relay_Rugged_Beige_Rugged_Beige_PDP_LEFT-2000x2000.png',
-  },
+  { id: 1, name: 'Egg Dining Table', price: 55.00, image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-40.jpg?v=1720754898&width=600' },
+  { id: 2, name: 'Century Starburst Clock', price: 70.00, image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-10_1bf59adc-8340-44f5-a49b-4e869a84af07.jpg?v=1720753642&width=600' },
+  { id: 3, name: 'Bouquet Flower Vase', price: 70.00, oldPrice: 890.00, image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-9.jpg?v=1720753208&width=600', discount: '-30%' },
+  { id: 4, name: 'Caravaggio Read Wall Light', price: 57.00, maxPrice: 80.00, image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22_1080x1080.jpg?v=1720753501' },
 ];
 
+const ProductCard = ({ product }) => {
+  const navigation =useNavigate();
 
-
-const ProductGrid = () => {
-    return (
-      <div className="flex flex-col lg:flex-row my-10">
-        {/* Left Banner Section */}
-        <div className="w-full lg:w-1/2 relative">
-          <motion.img
-            src="https://cdn.allbirds.com/image/upload/f_auto,q_auto,w_1867/cms/6MN5mrkw6hRncfKz6WSWYA/37ebe57832867529a22fb18df792815f/24Q3_FallFlow2_Site_ShopableFeatured_Desktop_2000x2000.jpg"
-            alt="Banner"
-            className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-          />
-          <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gradient-to-t from-black/50">
-            <h2 className="text-3xl font-bold text-white">Fall Colors Ahead</h2>
-            <p className="text-white mt-2">
-              Our latest drop takes its cues from the changing seasons.
-            </p>
-            <div className="mt-4 flex space-x-4">
-              <button className="bg-white w-[150px] text-black px-4 py-2 hover:scale-105 font-semibold transition duration-300 hover:bg-black hover:text-white">
-                Shop Men
-              </button>
-              <button className="bg-white w-[150px] text-black px-4 py-2 hover:scale-105 font-semibold transition duration-300 hover:bg-black hover:text-white">
-                Shop Women
-              </button>
-            </div>
-          </div>
+  return (
+    <motion.div 
+      className="relative overflow-hidden rounded-lg bg-white shadow-md"
+      whileHover={{ scale: 1.05 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.img
+        src={product.image}
+        alt={product.name}
+        className="w-full h-[290px] object-cover"
+        whileHover={{ scale: 1.1 }}
+      />
+      {product.discount && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
+          {product.discount}
+        </span>
+      )}
+      <motion.div
+        className="absolute inset-0 bottom-20 bg-black bg-opacity-10 flex flex-col justify-end items-center opacity-0"
+        whileHover={{ opacity: 1 }}
+      >
+        <div className="flex space-x-2 mb-2">
+          <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-white rounded-full">
+            <Heart size={20} />
+          </motion.button>
+          <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-white rounded-full">
+            <ShoppingCart size={20} />
+          </motion.button>
+          <motion.button whileHover={{ scale: 1.1 }} className="p-2 bg-white rounded-full">
+            <RefreshCw size={20} />
+          </motion.button>
         </div>
-  
-        {/* Right Product Section */}
-        <div className="w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4">
-          {products.map((product) => (
-            <motion.div
-              key={product.id}
-              className="relative p-4 bg-gray-100 hover:bg-white transition duration-300 shadow-lg rounded-lg group"
-            >
-              <motion.img
-                src={product.img}
-                alt={product.name}
-                className="w-full h-auto object-contain transition-transform duration-500 ease-in-out group-hover:scale-110"
-              />
-              <div className="mt-4">
-                <h3 className="font-semibold">{product.name}</h3>
-                <p className="text-gray-500">{product.color}</p>
-                <p className="text-black font-bold mt-2">{product.price}</p>
-              </div>
-              {/* Hover Buttons */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                className="absolute inset-0 flex flex-col justify-center items-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              >
-                <button className="bg-white mb-2 w-[150px] text-black px-4 py-2 hover:scale-105 font-semibold transition duration-300 hover:bg-black hover:text-white">
-                  Shop Men
-                </button>
-                <button className="bg-white text-black w-[150px] px-4 py-2 hover:scale-105 font-semibold transition duration-300 hover:bg-black hover:text-white">
-                  Shop Women
-                </button>
-              </motion.div>
-            </motion.div>
-          ))}
+        <motion.button
+          className="px-4 py-2 w-full bg-black text-white font-semibold rounded"
+          whileHover={{ scale: 1.05 }}
+          onClick={()=>navigation("/products/1")}
+        >
+          Quickview
+        </motion.button>
+      </motion.div>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <div className="flex items-center mt-1">
+          {product.oldPrice && (
+            <span className="text-gray-500 line-through mr-2">${product.oldPrice.toFixed(2)}</span>
+          )}
+          <span className="text-black font-bold">${product.price.toFixed(2)}</span>
+          {product.maxPrice && (
+            <span className="text-black font-bold ml-1">- ${product.maxPrice.toFixed(2)}</span>
+          )}
         </div>
       </div>
-    );
-  };
-  
-  export default ProductGrid;
+    </motion.div>
+  );
+};
 
+const ProductGrid = () => {
+  return (
+    <div className="container mx-auto px-4 py-10">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Bestseller</h2>
+        <p className="text-sm text-gray-600">Experience the best products at our store!</p>
+        <motion.button           whileHover={{ scale: 1.05 }}
+ className="px-4 py-2 border-2 border-black hover:bg-black hover:text-white rounded-lg">View All</motion.button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ProductGrid;

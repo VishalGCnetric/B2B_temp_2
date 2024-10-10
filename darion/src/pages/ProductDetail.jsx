@@ -1,322 +1,308 @@
+
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import AddToCartModal from '../components/cart/AddToCartModal';
+import { Star, Heart, RefreshCw, Share2, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const productData = {
-  name: "Women's Tree Runner Go",
-  price: 90,
-  rating: 4.5,
-  reviewCount: 175,
-  freeShipping: true,
-  colors: [
-    { name: 'Natural White', value: '#F5F5DC' },
-    { name: 'Natural Grey', value: '#808080' },
-    { name: 'Natural Black', value: '#000000' },
-    { name: 'Natural Navy', value: '#000080' },
-    { name: 'Burgundy', value: '#800020' },
-    { name: 'Blue', value: '#0000FF' },
-  ],
-  limitedEditionColors: [
-    { name: 'Thunder', value: '#4a4a4a' },
-    { name: 'Storm', value: '#708090' },
-    { name: 'Natural White', value: '#F5F5DC' },
-    { name: 'Red', value: '#FF0000' },
-    { name: 'Blue', value: '#0000FF' },
-    { name: 'Navy', value: '#000080' },
-    { name: 'Grey', value: '#808080' },
-  ],
-  saleColors: [
-    { name: 'Black', value: '#000000' },
-    { name: 'Beige', value: '#F5F5DC' },
-    { name: 'Grey', value: '#808080' },
-    { name: 'Blue', value: '#0000FF' },
-  ],
-  sizes: [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
-  images: [
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/files/A10955_24Q2_Tree_Runner_Go_Light_Grey_True_Navy_Blizzard_PDP_SINGLE_3Q_d6351abd-8d2d-4f8a-9d50-ff09e8746f72.png?v=1719251152',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA0023W_Shoe_Angle_Global_Womens_Tree_Dasher_2_Natural_Black_Natural_Black_a3f706d8-75e3-4679-8f57-3d20bab1ea35.png?v=1707182247',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/files/A10766M080_Tree_Dasher_2_SVP_Global_Mens_Tree_Hazy_Cocoa_Dark_Cocoa_Stony_Cream.png?v=1724260302',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA000UM_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHER_2.0_Medium_Grey_Light_Grey.png?v=1707182295',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/A10467W080-Tree_Dasher_2-45-Global-Tree-Blizzard-Natural_Black-Blizzard-OREO_copy_ca5486d7-97bd-4eed-95d0-5d0e42d40446.png?v=1707181980',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA0023W_Shoe_Angle_Global_Womens_Tree_Dasher_2_Natural_Black_Natural_Black_a3f706d8-75e3-4679-8f57-3d20bab1ea35.png?v=1707182247',
-    'https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA000UM_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHER_2.0_Medium_Grey_Light_Grey.png?v=1707182295',
-   
-  ],
-  highlights: [
-    'Design offers enhanced durability in the toe and features a sleek, elevated look',
-    'Reimagined midsole with more soft underfoot cushioning',
-    'Lightweight, breathable Tree Fiber in the upper material delivers a cool, comfortable ride',
-  ],
-  details: [
-    'Tree-to-sole with Tree Fiber upper, FSC-certified natural rubber outsole',
-    'Refreshed cushion with a new sugarcane-based green EVA midsole',
-    'Base Fit: Warm-weather, everyday wear; socks optional',
-    'Breezy Material: Lightweight, breathable Tree Fiber in the upper delivers airy, next-level comfort',
-    'Versatile Design: Wear with everything style, great for travel',
-    'Where It\'s Made: Made in Vietnam. Learn more about our operations',
-  ],
-  accordionSections: [
-    { title: 'Details', content: 'Product details...' },
-    { title: 'Sustainability', content: 'Our commitment to sustainable practices...' },
-    { title: 'Care Guide', content: 'To keep your Tree Runners in top shape...' },
-    { title: 'Shipping & Returns', content: 'Free shipping on orders over $75...' },
-  ],
-};
+const ProductDetailPage = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [currentVariant, setCurrentVariant] = useState(0);
+  const [activeTab, setActiveTab] = useState('description');
 
-const ProductDetail = () => {
-  const [selectedColor, setSelectedColor] = useState(productData.colors[4]); // Burgundy
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [expandedSection, setExpandedSection] = useState(null);
-  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [selectedVariants, setSelectedVariants] = useState({});
+  const productVariants = [
+    { id: 1, color: 'Pink', image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22_1080x1080.jpg?v=1720753501' },
+    { id: 2, color: 'Blue', image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22-1_1080x1080.jpg?v=1720753501' },
+    { id: 3, color: 'Green', image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22-1_1080x1080.jpg?v=1720753501' },
+  ];
+  const productData = {
+    name: "Caravaggio Read Wall Light",
+    basePrice: 57.00,
+    maxPrice: 60.00,
+    rating: 4.8,
+    reviewCount: 25,
+    viewCount: 24,
+    imageUrl:[
+      {  url: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22_1080x1080.jpg?v=1720753501' },
+      {  url: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22-1_1080x1080.jpg?v=1720753501' },
+      {  url: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22-1_1080x1080.jpg?v=1720753501' },
+      {  url: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22-1_1080x1080.jpg?v=1720753501' },
 
-  const handleAddToCart = () => {
-    if (selectedSize) {
-      setIsCartModalOpen(true);
-    } else {
-      alert("Please select a size before adding to cart.");
+    ],
+    variants: [
+      { 
+        id: 1, 
+        name: 'Handle/Shade 750mm', 
+        price: 800.00,
+        image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22_1080x1080.jpg?v=1720753501'
+      },
+      { 
+        id: 2, 
+        name: 'Suspension/Arms/Base', 
+        price: 872.00,
+        image: 'https://wpbingo-darion.myshopify.com/cdn/shop/files/pro-22_1080x1080.jpg?v=1720753501'
+      }
+    ],
+    description: "The Caravaggio Read Wall Light is a modern and elegant lighting solution perfect for bedrooms, living rooms, or office spaces. Its adjustable arm and shade allow for precise light direction.",
+    reviews: [
+      { id: 1, author: "John D.", rating: 5, comment: "Excellent quality and beautiful design!" },
+      { id: 2, author: "Sarah M.", rating: 4, comment: "Good light, but a bit pricey." },
+    ],
+    shipping: {
+      estimatedDelivery: "Jun 22 - Jun 30",
+      methods: [
+        { name: "Standard Shipping", price: 5.99 },
+        { name: "Express Shipping", price: 15.99 },
+      ]
+    },
+    returns: {
+      policy: "30-day return policy",
+      conditions: "Item must be unused and in original packaging."
     }
   };
-
-  const cartItem = {
-    name: "Men's Tree Dasher 2",
-    color: "Blizzard (Light Gray Sole)",
-    size: selectedSize,
-    price: productData.price,
-    image: "https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA000UM_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHER_2.0_Medium_Grey_Light_Grey.png?v=1707182295"
+  const nextVariant = () => {
+    setCurrentVariant((prev) => (prev + 1) % productVariants.length);
   };
 
-  const recommendedProducts = [
-    { name: "Anytime Ankle Sock", price: 16, image: "https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA000UM_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHER_2.0_Medium_Grey_Light_Grey.png?v=1707182295" },
-    { name: "Anytime No Show Sock", price: 14, image: "https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA0023W_Shoe_Angle_Global_Womens_Tree_Dasher_2_Natural_Black_Natural_Black_a3f706d8-75e3-4679-8f57-3d20bab1ea35.png?v=1707182247" },
-    { name: "Men's Tree Runner Sis", price: 100, image: "https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA0023W_Shoe_Angle_Global_Womens_Tree_Dasher_2_Natural_Black_Natural_Black_a3f706d8-75e3-4679-8f57-3d20bab1ea35.png?v=1707182247" },
-    { name: "Men's Tree Gliders", price: 135, image: "https://cdn.allbirds.com/image/fetch/q_auto,f_auto/w_1066,f_auto,q_auto/https://www.allbirds.com/cdn/shop/products/AA0023W_Shoe_Angle_Global_Womens_Tree_Dasher_2_Natural_Black_Natural_Black_a3f706d8-75e3-4679-8f57-3d20bab1ea35.png?v=1707182247" },
-  ];
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col lg:flex-row">
-        {/* Image gallery */}
-        
-
-        
-        <div className=" flex flex-reverse gap-2 lg:w-3/5 pr-8">
-         
-          <div className="flex flex-col flex-wrap gap-2 w-[10%]">
-            {productData.images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`Thumbnail ${index + 1}`}
-                className={`w-16 h-16 object-cover rounded cursor-pointer ${
-                  selectedImage === index ? 'border-2 border-blue-500' : ''
-                }`}
-                onClick={() => setSelectedImage(index)}
-              />
-            ))}
-          </div>
-          <motion.div
-            key={selectedImage}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="mb-4 w-[80%]"
-          >
-            <img
-              src={productData.images[selectedImage]}
-              alt={`${productData.name} - ${selectedColor.name}`}
-              className="w-full h-[90vh] rounded-lg  border transition-transform duration-500 ease-in-out group-hover:scale-105"
-            />
-          </motion.div>
-        </div>
-
-        {/* Product details */}
-        <div className="lg:w-2/5 mt-8 lg:mt-0">
-          <h1 className="text-2xl font-bold mb-2">{productData.name}</h1>
-          <div className="flex items-center mb-4">
-            <span className="text-xl font-semibold">${productData.price}</span>
-            {productData.freeShipping && (
-              <span className="ml-4 text-sm text-green-600">FREE SHIPPING</span>
-            )}
-          </div>
-          <div className="flex items-center mb-4">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  className={`w-4 h-4 ${
-                    i < Math.floor(productData.rating) ? 'fill-current' : 'stroke-current'
-                  }`}
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-              ))}
-            </div>
-            <span className="ml-2 text-sm text-gray-600">
-              ({productData.reviewCount})
-            </span>
-          </div>
-
-          {/* Color selection */}
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold mb-2">CLASSICS:</h2>
-            <div className="flex flex-wrap gap-2">
-              {productData.colors.map((color) => (
-                <motion.button
-                  key={color.name}
-                  className={`w-6 h-6 rounded-full border ${
-                    selectedColor.name === color.name
-                      ? 'border-blue-500'
-                      : 'border-gray-300'
-                  }`}
-                  style={{ backgroundColor: color.value }}
-                  onClick={() => setSelectedColor(color)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold mb-2">LIMITED EDITION:</h2>
-            <div className="flex flex-wrap gap-2">
-              {productData.limitedEditionColors.map((color) => (
-                <motion.button
-                  key={color.name}
-                  className={`w-6 h-6 rounded-full border ${
-                    selectedColor.name === color.name
-                      ? 'border-blue-500'
-                      : 'border-gray-300'
-                  }`}
-                  style={{ backgroundColor: color.value }}
-                  onClick={() => setSelectedColor(color)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold mb-2">SALE:</h2>
-            <div className="flex flex-wrap gap-2">
-              {productData.saleColors.map((color) => (
-                <motion.button
-                  key={color.name}
-                  className={`w-6 h-6 rounded-full border ${
-                    selectedColor.name === color.name
-                      ? 'border-blue-500'
-                      : 'border-gray-300'
-                  }`}
-                  style={{ backgroundColor: color.value }}
-                  onClick={() => setSelectedColor(color)}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Size selection */}
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold mb-2">SELECT SIZE:</h2>
-            <div className="grid grid-cols-4 gap-2">
-              {productData.sizes.map((size) => (
-                <motion.button
-                  key={size}
-                  className={`py-2  border ${
-                    selectedSize === size
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-white text-gray-900 border-gray-300'
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {size}
-                </motion.button>
-              ))}
-            </div>
-          </div>
-
-          {/* Select a size button */}
-          {selectedSize? <motion.button
-        className="w-full bg-gray-900 text-white py-3 rounded font-semibold mb-4"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleAddToCart}
-      >
-        ADD TO CART
-      </motion.button>: <motion.button
-            className="w-full bg-gray-200 text-zinc-500 py-3 rounded font-semibold mb-4"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            SELECT A SIZE
-          </motion.button>}
-         
-         
-          <div className="text-sm text-center mb-6">
-            <a href="#" className="text-gray-600 underline">See Size Chart</a>
-          </div>
-
-          <div className="mb-6">
-            <h2 className="text-sm font-semibold mb-2">FIND IN STORE</h2>
-            <p className="text-sm text-gray-600">Please select a size to see availability at a store near you.</p>
-          </div>
-
-          {/* Product highlights */}
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold mb-4">Tree Runner Go Highlights</h2>
-            <ul className="list-disc list-inside space-y-2 text-sm">
-              {productData.highlights.map((highlight, index) => (
-                <li key={index}>{highlight}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Accordion sections */}
-          <div className="mt-8">
-            {productData.accordionSections.map((section, index) => (
-              <div key={index} className="border-b border-gray-200">
-                <button
-                  className="flex justify-between items-center w-full py-4 text-left"
-                  onClick={() => setExpandedSection(expandedSection === index ? null : index)}
-                >
-                  <span className="font-semibold">{section.title}</span>
-                  {expandedSection === index ? (
-                    <ChevronUp className="w-5 h-5" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5" />
-                  )}
-                </button>
-                {expandedSection === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="pb-4 text-sm"
-                  >
-                    <p>{section.content}</p>
-                  </motion.div>
-                )}
+  const prevVariant = () => {
+    setCurrentVariant((prev) => (prev - 1 + productVariants.length) % productVariants.length);
+  };
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'description':
+        return <p>{productData.description}</p>;
+      case 'reviews':
+        return (
+          <div>
+            <h3 className="font-semibold mb-2">Customer Reviews</h3>
+            {productData.reviews.map(review => (
+              <div key={review.id} className="mb-4">
+                <div className="flex items-center">
+                  <span className="font-semibold mr-2">{review.author}</span>
+                  <div className="flex text-yellow-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} fill={i < review.rating ? "currentColor" : "none"} size={16} />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm">{review.comment}</p>
               </div>
             ))}
           </div>
+        );
+      case 'shipping':
+        return (
+          <div>
+            <h3 className="font-semibold mb-2">Shipping Information</h3>
+            <p>Estimated delivery: {productData.shipping.estimatedDelivery}</p>
+            <ul className="list-disc list-inside mt-2">
+              {productData.shipping.methods.map((method, index) => (
+                <li key={index}>{method.name}: ${method.price.toFixed(2)}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case 'return':
+        return (
+          <div>
+            <h3 className="font-semibold mb-2">Return Policy</h3>
+            <p>{productData.returns.policy}</p>
+            <p className="mt-2"><strong>Conditions:</strong> {productData.returns.conditions}</p>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+  return (
+    <div className="container flex flex-col text-center justify-center items-center mx-auto px-4 py-8">
+       <nav className="cursor-pointer mb-4 w-full text-left text-lg text-semibold">
+      <ol className="list-reset flex text-gray-700">
+        <li>
+          <a href="/" className="hover:text-gray-900">Home</a>
+        </li>
+        <li>
+          <span className="mx-2">/</span>
+        </li>
+        <li>
+          <a href="/bathroom" className="hover:text-gray-900">Bathroom</a>
+        </li>
+        <li>
+          <span className="mx-2">/</span>
+        </li>
+        <li className="text-gray-500">
+          Caravaggio Read Wall Light
+        </li>
+      </ol>
+    </nav>
+      <div className="  grid grid-cols-1">
+        {/* Product Image Slider */}
+        <div className=" w-full flex gap-8">
+        <div className="flex flex-row gap-2 md:flex-col">
+            {/* Thumbnails */}
+            {productData.imageUrl.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentVariant(index)}
+                className={`border p-1 my-1 ${index === currentVariant ? 'border-black' : 'border-gray-300'}`}
+              >
+                <img src={image.url} alt={`Thumbnail ${index + 1}`} className="w-48 h-48 object-cover" />
+              </button>
+            ))}
+          </div> 
+          <div className='relative'>       
+          <motion.div
+            key={currentVariant}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="aspect-square  relative overflow-hidden rounded-lg"
+          >
+            <img
+              src={productData.imageUrl[currentVariant].url}
+              alt={`Century Starburst Clock -`}
+              className="w-[100%] h-auto object-cover"
+            />
+          </motion.div>
+          <button
+            onClick={prevVariant}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            onClick={nextVariant}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
+          >
+            <ChevronRight />
+          </button>
+          </div>  
+
+        </div>
+
+        {/* Product Details */}
+        <div className="w-full my-10" >
+          <h1 className="text-3xl font-bold mb-2">Century Starburst Clock</h1>
+          <div className="flex justify-center items-center mb-4">
+            <div className="flex text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} fill="currentColor" />
+              ))}
+            </div>
+            <span className="ml-2 text-gray-600">32 reviews</span>
+          </div>
+          <p className="text-2xl font-bold mb-4">$70.00</p>
+          <p className="text-gray-600 mb-4">
+            32 people are viewing this right now
+          </p>
+          <div className="flex justify-center items-center space-x-4 mb-4">
+            <button className="flex items-center text-red-500">
+              <Heart className="mr-1" /> 26 people love it
+            </button>
+            <button className="flex items-center text-blue-500">
+              <RefreshCw className="mr-1" /> In stock
+            </button>
+          </div>
+          <p className="text-gray-700 mb-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+<div className='flex flex-col items-center justify-center'>
+          {productData.variants.map(variant => (
+              <div key={variant.id} className="w-1/2 flex items-center justify-around border mx-auto px-4 mb-4 py-4">
+                <div className="flex  items-center">
+                  <img src={variant.image} alt={variant.name} className="w-12 h-12 object-cover mr-4" />
+                  <span>{variant.name}</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="mr-4">${variant.price.toFixed(2)}</span>
+                  <input
+                    type="checkbox"
+                    checked={selectedVariants[variant.id] || false}
+                    onChange={() => handleVariantSelection(variant.id)}
+                    className="w-5 h-5"
+                  />
+                </div>
+              </div>
+            ))}
+            </div>
+          <div className="flex justify-center items-center mb-6 gap-4">
+            <button
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              className="p-2 border rounded-l"
+            >
+              <Minus size={16} />
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-16 text-center border"
+            />
+            <button
+              onClick={() => setQuantity(quantity + 1)}
+              className="p-2 border rounded-r"
+            >
+              <Plus size={16} />
+            </button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className=" w-1/3  px-6 py-2 bg-black text-white rounded"
+            >
+              Add To Cart
+            </motion.button>
+          </div>
+          <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+               className="w-1/2 py-3 border border-gray-300  mb-6 hover:bg-black hover:text-white rounded-lg">
+            Buy it now
+          </motion.button>
+          <div className="flex justify-center items-center gap-20">
+            <button className="flex items-center">
+              <RefreshCw className="mr-1" /> Compare
+            </button>
+            <button className="flex items-center">
+              <Star className="mr-1" /> Question
+            </button>
+            <button className="flex items-center">
+              <Share2 className="mr-1" /> Share
+            </button>
+          </div>
         </div>
       </div>
-      <AddToCartModal
-        isOpen={isCartModalOpen}
-        onClose={() => setIsCartModalOpen(false)}
-        cartItem={cartItem}
-        recommendedProducts={recommendedProducts}
-      />
+      <div className="w-1/2 border-t pt-4 mb-6 p-6 bg-zinc-100 rounded-md my-4">
+        <h3 className="font-semibold mb-2 text-zinc-800">Guaranteed Checkout</h3>
+        <div className="flex justify-center space-x-2">
+          <img src="https://wpbingo-darion.myshopify.com/cdn/shop/files/Variable-Color.webp?crop=center&height=30&v=1721272978&width=432" alt="Visa" className="h-6" />
+      
+        </div>
+      </div>
+
+      <div className="mb-6">
+        <div className="flex items-center justify-center border-b">
+          {['description', 'reviews', 'shipping', 'return'].map((tab) => (
+            <button
+              key={tab}
+              className={`py-2 px-4 ${activeTab === tab ? 'border-b-2 border-black font-semibold' : 'text-gray-500'}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </div>
+        <div className="mt-4 h-[100px]">
+          {renderTabContent()}
+        </div>
+      </div>
+   
+     
     </div>
   );
 };
 
-export default ProductDetail;
+export default ProductDetailPage;
+
+
+

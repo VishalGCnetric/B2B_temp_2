@@ -4,15 +4,14 @@ import ProductGrid from '../components/HomeComponent/ProductGrid'
 import ProductSlider from '../components/HomeComponent/ProductSlider'
 import VerticalBannerSlider from '../components/HomeComponent/VerticalSlider'
 import NewsletterSignup from '../components/HomeComponent/NewsLetterSignup'
+import ShopByCategory from '../components/HomeComponent/ShopbyCategory'
 
 const Home = () => {
   return (
     <div className="w-full ">
 <VerticalBannerSlider/>
-<BackGroundBanner/>
+<ShopByCategory/>
 <ProductGrid/>
-<ProductSlider/>
-<NewsletterSignup/>
     </div>
   )
 }

@@ -1,253 +1,181 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
-const LoginRegister = () => {
-  // State for login form
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
-
-  // State for registration form
-  const [registerData, setRegisterData] = useState({
+const AccountForm = () => {
+  const [formType, setFormType] = useState('signIn');
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    emailOffers: false,
   });
+  const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState(null);
 
-  // Handle login input changes
-  const handleLoginChange = (e) => {
-    const { name, value } = e.target;
-    setLoginData((prevState) => ({ ...prevState, [name]: value }));
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle register input changes
-  const handleRegisterChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setRegisterData((prevState) => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+  const validateForm = () => {
+    const newErrors = {};
+    if (formType === 'create' && !formData.firstName) {
+      newErrors.firstName = 'First name is required';
+    }
+    if (formType === 'create' && !formData.lastName) {
+      newErrors.lastName = 'Last name is required';
+    }
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Handle login submit
-  const handleLoginSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login Data:', loginData);
+    if (validateForm()) {
+      // Here you would typically send the data to your backend
+      console.log('Form submitted:', formData);
+      showToast('success', `Account ${formType === 'signIn' ? 'signed in' : 'created'} successfully!`);
+    } else {
+      showToast('error', 'Please correct the errors in the form.');
+    }
   };
 
-  // Handle register submit
-  const handleRegisterSubmit = (e) => {
-    e.preventDefault();
-    console.log('Register Data:', registerData);
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
   };
 
   return (
-    <motion.div
-      className="bg-[#f7f1ed] min-h-screen flex justify-center items-center py-20 px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-20"
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 120 }}
-      >
-        {/* Login Section */}
-        <motion.div
-          className="space-y-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md my-8">
+      <h1 className="text-2xl font-bold mb-6">{formType === 'signIn' ? 'Account' : 'Create Account'}</h1>
+      <form onSubmit={handleSubmit}>
+        {formType === 'create' && (
+          <>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                className="w-full p-2 border rounded"
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
+              {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                className="w-full p-2 border rounded"
+                value={formData.lastName}
+                onChange={handleInputChange}
+              />
+              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+            </div>
+          </>
+        )}
+        <div className="mb-4">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            className="w-full p-2 border rounded"
+            value={formData.email}
+            onChange={handleInputChange}
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
+        <div className="mb-4 relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            placeholder="Password"
+            className="w-full p-2 border rounded"
+            value={formData.password}
+            onChange={handleInputChange}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-2 text-gray-500"
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+        </div>
+        {formType === 'signIn' && (
+          <a href="#" className="text-sm text-blue-500 hover:underline">
+            Lost your password?
+          </a>
+        )}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          className="w-full bg-black text-white p-2 rounded mt-4"
         >
-          <h2 className="text-2xl font-bold mb-4">LOGIN</h2>
-
-          <form onSubmit={handleLoginSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="loginEmail" className="block text-sm font-medium">
-                EMAIL
-              </label>
-              <input
-                id="loginEmail"
-                name="email"
-                type="email"
-                value={loginData.email}
-                onChange={handleLoginChange}
-                className="mt-1 block w-full h-[80px] border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="loginPassword" className="block text-sm font-medium">
-                PASSWORD
-              </label>
-              <input
-                id="loginPassword"
-                name="password"
-                type="password"
-                value={loginData.password}
-                onChange={handleLoginChange}
-                className="mt-1 block w-full h-[80px] border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                placeholder="Enter your password"
-              />
-            </div>
-
+          {formType === 'signIn' ? 'SIGN IN' : 'REGISTER'}
+        </motion.button>
+      </form>
+      <div className="mt-4 text-center">
+        {formType === 'signIn' ? (
+          <>
+            <p className="text-sm text-gray-600">New customer?</p>
+            <p className="text-sm text-gray-600">
+              Sign up for early Sale access plus tailored new arrivals, trends and promotions. To opt out, click unsubscribe in our
+              emails.
+            </p>
             <motion.button
-              type="submit"
-            className="w-full h-[80px] bg-black text-white hover:text-black py-3 font-bold transition-colors duration-300 ease-in-out hover:bg-[#f7f1ed] hover:border-2 hover:border-black"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-            >
-              SIGN IN
-            </motion.button>
-
-            <div className="text-center">
-              <a
-                href="#"
-                className="text-sm underline text-black hover:text-gray-600"
-              >
-                FORGOT PASSWORD
-              </a>
-            </div>
-          </form>
-        </motion.div>
-
-        {/* Register Section */}
-        <motion.div
-          className="space-y-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <h2 className="text-2xl font-bold mb-4">CREATE AN ACCOUNT</h2>
-
-          <p className="text-sm mb-4">
-            We never save credit card information.
-            <br />
-            <br />
-            Registering makes checkout fast and easy and saves your order information in your account.
-          </p>
-
-          <form onSubmit={handleRegisterSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium">
-                  FIRST NAME
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  value={registerData.firstName}
-                  onChange={handleRegisterChange}
-                  className="mt-1 h-[80px] block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                  placeholder="Enter your first name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium">
-                  LAST NAME
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={registerData.lastName}
-                  onChange={handleRegisterChange}
-                  className="mt-1 h-[80px] block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                  placeholder="Enter your last name"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="registerEmail" className="block text-sm font-medium">
-                EMAIL*
-              </label>
-              <input
-                id="registerEmail"
-                name="email"
-                type="email"
-                value={registerData.email}
-                onChange={handleRegisterChange}
-                className="mt-1 h-[80px] block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                placeholder="Enter your email"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="registerPassword" className="block text-sm font-medium">
-                PASSWORD*
-              </label>
-              <input
-                id="registerPassword"
-                name="password"
-                type="password"
-                value={registerData.password}
-                onChange={handleRegisterChange}
-                className="mt-1 h-[80px] block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                placeholder="Create a password"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium">
-                CONFIRM PASSWORD*
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={registerData.confirmPassword}
-                onChange={handleRegisterChange}
-                className="mt-1 h-[80px] block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black p-3 bg-white"
-                placeholder="Confirm your password"
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                id="emailOffers"
-                name="emailOffers"
-                type="checkbox"
-                checked={registerData.emailOffers}
-                onChange={handleRegisterChange}
-                className="h-4 w-4  border-gray-300 rounded"
-              />
-              <label htmlFor="emailOffers" className="text-sm">
-                Email me with news and offers
-              </label>
-            </div>
-
-            <motion.button
-              type="submit"
-           className="w-full h-[80px] bg-black text-white hover:text-black py-3 font-bold transition-colors duration-300 ease-in-out hover:bg-[#f7f1ed] hover:border-2 hover:border-black"
-
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              onClick={() => setFormType('create')}
+              className="mt-2 bg-white text-black border border-black p-2 rounded w-full"
             >
               REGISTER
             </motion.button>
-
-            <p className="text-sm text-gray-500 text-center mt-4">
-              By creating an account, you agree to our{' '}
-              <a href="#" className="underline hover:text-gray-600">
-                Terms of Use
-              </a>{' '}
-              and{' '}
-              <a href="#" className="underline hover:text-gray-600">
-                Privacy Policy
-              </a>.
-            </p>
-          </form>
+          </>
+        ) : (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setFormType('signIn')}
+            className="mt-2 bg-white text-black border border-black p-2 rounded w-full"
+          >
+            SIGN IN
+          </motion.button>
+        )}
+      </div>
+      {toast && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className={`fixed bottom-4  p-4 rounded-lg shadow-lg ${
+            toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white`}
+        >
+          {toast.type === 'success' ? (
+            <CheckCircle className="inline-block mr-2" size={20} />
+          ) : (
+            <AlertCircle className="inline-block mr-2" size={20} />
+          )}
+          {toast.message}
         </motion.div>
-      </motion.div>
-    </motion.div>
+      )}
+    </div>
   );
 };
 
-export default LoginRegister;
+export default AccountForm;

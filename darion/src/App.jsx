@@ -5,6 +5,7 @@ import Footer from './components/footer/Footer';
 import CartModal from './components/cart/CartModal';
 import { CartProvider } from './contextApi/CartContext';
 import Loading from './components/Loading';  // New loading component
+import QuoteDetails from './pages/QuoteDetails';
 
 // Lazy load pages
 const Home = React.lazy(() => import('./pages/Home'));
@@ -17,7 +18,7 @@ const AddressForm = React.lazy(() => import('./pages/AddressForm'));
 const OrderDetails = React.lazy(() => import('./pages/OrderDetails'));
 const ThankYouPage = React.lazy(() => import('./pages/ThankYouPage'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));  // Custom 404 page
-const Checkout =React.lazy(()=> import("./components/Checkout/Checkout"))
+const Checkout =React.lazy(()=> import("./pages/Checkout"))
 
 const App = () => {
   const [scrolled, setScrolled] = useState(false);  
@@ -48,7 +49,7 @@ const App = () => {
     <CartProvider>
       <header className={`w-full ${
           scrolled ? 'fixed top-0 backdrop-blur-md bg-opacity-10 shadow-md hover:bg-white' : 'bg-opacity-100'
-        } transition-all duration-300 z-50 ${navbarHighlight ? 'border-b-4 border-indigo-600' : ''}`}>
+        } transition-all duration-300 z-50 ${navbarHighlight ? 'border-b-4 border-red-400' : ''}`}>
         <Navbar />
       </header>
       <CartModal /> 
@@ -57,11 +58,15 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
+
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/login" element={<LoginRegister />} />
           <Route path="/account" element={<Account />} />
           <Route path="/account/add-address" element={<AddressForm />} />
           <Route path="/order/:orderId" element={<OrderDetails />} />
+          <Route path="/quote/:quoteId" element={<QuoteDetails />} />
+
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success/:orderId" element={<ThankYouPage />} />
           <Route path="*" element={<NotFound />} />  {/* 404 page route */}
